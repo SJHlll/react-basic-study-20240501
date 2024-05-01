@@ -1,24 +1,26 @@
 import logo from './logo.svg';
 import './App.css';
+import NoName from './NoName';
 
 function App() {
+
+  const $h2 = <h2>ㅎㅇ</h2>;
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
+    <>
+    <NoName />
+      <div className='App'>
+        <h1>ㅎㅇ</h1>
+        {$h2}
+      </div>
+      <div className='noname'>
+        <input type='text' placeholder='ㅂㅂ'/>
         <p>
-          Edit <code>src/App.js</code> and save to reload.
+          반가워<br />
+          나는나야
         </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+      </div>
+    </>
   );
 }
 
