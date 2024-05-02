@@ -23,9 +23,15 @@ function App() {
     },
   ];
 
+  // ExpenseForm에게 내려보낼 함수
+  const addExpenseHandler = (NewExpense) => {
+    console.log('App 컴포넌트 응답');
+    console.log('newExpense : ', NewExpense);
+  };
+
   return (
     <>
-      <NewExpense />
+      <NewExpense onAddExpense={addExpenseHandler} />
       <Expenses items={expenses} />
     </>
   );
