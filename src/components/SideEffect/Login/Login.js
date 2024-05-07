@@ -14,10 +14,6 @@ import Button from '../../UI/Button/Button';
   return: 관리할 상태값들을 반환
 */
 const emailReducer = (state, action) => {
-  console.log('email reducer called!!!');
-  console.log('state: ', state);
-  console.log('action: ', action);
-
   // dispatch 함수가 전달한 액션 객체의 타입에 따라 변경할 상태값을 반환.
   if (action.type === 'USER_INPUT') {
     return {
@@ -41,7 +37,7 @@ const passwordReducer = (state, action) => {
   } else if (action.type === 'INPUT_VALIDATE') {
     return {
       value: state.value,
-      isValid: action.val.trim().length > 6,
+      isValid: state.value.trim().length > 6,
     };
   }
 };
