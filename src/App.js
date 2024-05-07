@@ -1,5 +1,5 @@
 import './App.css';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import MainHeader from './components/SideEffect/MainHeader/MainHeader';
 import Login from './components/SideEffect/Login/Login';
 import Home from './components/SideEffect/Home/Home';
@@ -11,10 +11,19 @@ const App = () => {
   // 화면이 리렌더링 될 때 LocalStorage를 확인해서
   // 현재 Login-flag가 존재하는지 검사
   console.log('로그인 검사 수행');
-  const storedLoginFlag = localStorage.getItem('login-flag');
-  if (storedLoginFlag === '1') {
-    setIsLoggedIn(true);
-  }
+
+  // 기존에 로그인 한 사람인지 확인하는 코드는
+  // 리렌더링 될 때마다 실행하면 안된다 (한번만 확인)
+  useEffect(() => {
+    console.log('useEffect 실행 - 최초 1회');
+    const storedLoginFlag = localStorage.getItem('login-flag');
+    if (storedLoginFlag === '1') {
+      setIsLoggedIn(true);
+    }
+  }, []);
+  // 의존성 배열 : useEffect가 실행되어야 하는 트리거 변수
+  // 배열 안에 변수를 지정하면, 해당 변수의 값이 변할 때마다 useEffect가 실행됨
+  // 만약 배열을 비워놓으면, 렌더링 과정에서 단 한번만 실행됨
 
   // 서버로 로그인을 요청하는 함수 (나중에 fetch를 통해 백엔드와의 연계 필요)
   const loginHandler = (email, password) => {
@@ -24,9 +33,15 @@ const App = () => {
     setIsLoggedIn(true);
   };
 
+  const logoutHandler = () => {
+    localStorage.removeItem('login-flag');
+    setIsLoggedIn(false);
+  };
+
+  console.log('App 컴포넌트 끝');
   return (
     <>
-      <MainHeader />
+      <MainHeader isAuthenticated={isLoggedIn} onLogout={logoutHandler} />
       <main>
         {isLoggedIn && <Home />}
         {!isLoggedIn && <Login onLogin={loginHandler} />}
