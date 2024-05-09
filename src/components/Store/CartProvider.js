@@ -1,4 +1,4 @@
-import React, { useReducer } from 'react';
+import React, { act, useReducer } from 'react';
 import CartContext from './cart-context';
 
 const defaultState = {
@@ -46,9 +46,33 @@ const cartReducer = (state, action) => {
     };
   } else if (action.type === 'REMOVE') {
     // 지우려고 하는 항목의 id와 일치하지 않는 항목들만 따로 배열로 받아서 리턴. (filter)
-    const removedItem = state.items.filter((item) => item.id !== action.id);
+    // const removedItem = state.items.filter((item) => item.id !== action.id);
+    // return {
+    //   items: removedItem, // 최신 상태로 상태를 업데이트 -> cartState로 전달됨.
+    // };
+
+    // 최신 상태의 배열을 복사
+    const existingItem = [...state.items];
+    // 수량을 감소시킬 대상의 인덱스를 찾기
+    const index = existingItem.findIndex((item) => item.id === action.id);
+    // 제거 대상 아이템을 가져옴
+    const delTargetItem = existingItem[index];
+    // 총액 계산
+    const updatedPrice = state.totalPrice - delTargetItem.price;
+
+    // 업데이트 전의 수량이 1이면 filter를 이용해 카트에서 아예 빼버린다
+    // 1보다 크면 filter로 제거하지 않고, 기존 배열에 수량만 1 내린 채로 업데이트한다
+    let removedItems;
+    if (delTargetItem.amount === 1) {
+      removedItems = state.items.filter((item) => item.id !== action.id);
+    } else {
+      delTargetItem.amount--;
+      removedItems = [...existingItem];
+    }
+
     return {
-      items: removedItem, // 최신 상태로 상태를 업데이트 -> cartState로 전달됨.
+      items: removedItems,
+      totalPrice: updatedPrice,
     };
   }
 
